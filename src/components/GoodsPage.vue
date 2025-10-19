@@ -1,33 +1,26 @@
 <script setup>
 import { inject, computed, ref } from 'vue'
-import { useRoute } from 'vue-router' // <-- Импортируем useRoute
+import { useRoute } from 'vue-router'
 import Header from './Header.vue'
 import Footer from './Footer.vue'
 import DishCard from './DishCard.vue'
 
-// 1. Получаем данные и методы
 const { dishes, restaurants } = inject('data')
-const { addToCart } = inject('cartData') // Предполагаем, что вам нужна эта функция
+const { addToCart } = inject('cartData')
 
-// Получаем текущий маршрут
 const route = useRoute()
 
-// Получаем ID ресторана из URL (параметр :id)
 const currentRestaurantId = route.params.id
 
-// 2. Вычисляем (computed) название текущего ресторана
 const currentRestaurant = computed(() => {
-  // Находим объект ресторана по ID. ID из URL - это строка, поэтому используем ==
   const id = Number(currentRestaurantId)
   return restaurants.value.find((r) => r.id === id)
 })
 
-// Вычисляем заголовок для отображения
 const restaurantTitle = computed(() => {
   return currentRestaurant.value ? currentRestaurant.value.title : 'Ресторан не найден'
 })
 
-// Вычисляем блюда, относящиеся к этому ресторану
 const currentRestaurantDishes = computed(() => {
   const id = Number(currentRestaurantId)
   return dishes.value.filter((dish) => dish.restaurantId === id)
